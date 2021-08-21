@@ -6,14 +6,10 @@ const parseMessage = (message) => {
   return { valid, command, args };
 };
 
-const handleMessageCreate = (message) => {
-  console.log("Message created!", message);
-  const { valid, command, args } = parseMessage(message);
-  if (valid) {
-    console.log(command, args);
-  }
+const handleMessage = (message) => {
+  console.log("New message: ", message);
 };
 
 module.exports = {
-  execute: handleMessageCreate,
+  execute: handleMessage,
 };
