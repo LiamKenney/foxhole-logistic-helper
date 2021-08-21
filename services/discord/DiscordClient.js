@@ -1,18 +1,19 @@
 const { Client, Intents } = require("discord.js");
 const { readdirSync } = require("fs");
 
-const addEvents = (client) => {
-  console.log(__dirname);
+const addEvents = (client, cb) => {
   const eventFiles = readdirSync("./services/discord/events").filter((file) =>
     file.endsWith(".js")
   );
 
   for (const file of eventFiles) {
-    const event = require(`./events/${file}`);
+    const eventName = file.split(".").slice(0, -1).join(".");
+    const event = require(`./events/${eventName}`);
+    console.log(`Adding eventListener for ${eventName}`);
     if (event.once) {
-      client.once(file, (...args) => event.execute(...args));
+      client.once(eventName, (...args) => event.execute(...args, cb));
     } else {
-      client.on(file, (...args) => event.execute(...args));
+      client.on(eventName, (...args) => event.execute(...args));
     }
   }
   return client;
@@ -20,8 +21,8 @@ const addEvents = (client) => {
 
 const clientSetup = (token) => {
   return new Promise((resolve, reject) => {
-    let client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES] });
-    client = addEvents(client);
+    let client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+    client = addEvents(client, resolve);
     client.login(token).catch((err) => reject("Error with login: ", err));
   });
 };
