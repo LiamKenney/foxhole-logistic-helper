@@ -7,8 +7,7 @@ const parseMessage = (message) => {
 };
 
 const handleMessageCreate = (message) => {
-  console.log("Message created!", message);
-  const { valid, command, args } = parseMessage(message);
+  const { valid, command, args } = parseMessage(message.content);
   if (valid) {
     console.log(command, args);
   }

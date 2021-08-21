@@ -9,7 +9,7 @@ const addEvents = (client, cb) => {
   for (const file of eventFiles) {
     const eventName = file.split(".").slice(0, -1).join(".");
     const event = require(`./events/${eventName}`);
-    console.log(`Adding eventListener for ${eventName}`);
+    console.log(`Adding eventListener for ${eventName}`, Boolean(event.once));
     if (event.once) {
       client.once(eventName, (...args) => event.execute(...args, cb));
     } else {
@@ -21,7 +21,9 @@ const addEvents = (client, cb) => {
 
 const clientSetup = (token) => {
   return new Promise((resolve, reject) => {
-    let client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+    let client = new Client({
+      intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+    });
     client = addEvents(client, resolve);
     client.login(token).catch((err) => reject("Error with login: ", err));
   });

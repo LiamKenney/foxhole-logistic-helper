@@ -10,7 +10,8 @@ const handleReady = (client, cb) => {
   let index = 0;
   guilds.each((guild) => {
     console.log(`-- ${index}: ${guild.name} (ID: ${guild.id})`);
-    console.log(`Channel number: ${[...guild.channels.cache].length}`);
+    const channels = guild.channels.cache;
+    console.log(`Channel number: ${[...channels].length}`);
     index++;
   });
   console.log(`Total servers: ${[...guilds].length}`);
